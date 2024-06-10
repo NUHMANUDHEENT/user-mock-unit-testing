@@ -3,78 +3,45 @@ package test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"test/controller"
-	"test/database"
-	"test/routers"
 	"testing"
+	"userPage/controller"
+	"userPage/database"
+	"userPage/models"
 
 	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
+	"github.com/go-playground/assert/v2"
 )
 
-func setupRouter() *gin.Engine {
-	router := gin.Default()
-	routers.SetupRouter(router)
-	return router
+func routerInit() *gin.Engine {
+	r := gin.Default()
+	return r
 }
 
 func TestSignUp(t *testing.T) {
-	// Initialize the mock database
-	mockDB := new(database.MockDatabase)
-	controller.DB = mockDB
+	db := database.InitDatabase()
+	router := routerInit()
 
-	// Define expected behavior
-	mockDB.On("CreateUser", "testuser", "password123").Return(nil)
+	router.POST("/signup", controller.SignUp(db))
 
-	router := setupRouter()
-
-	signUpData := controller.SignUpRequest{
-		Username: "testuser",
-		Password: "password123",
+	input := models.Users{
+		Name:     "nuhman",
+		Email:    "nuhman@gmail.com",
+		Password: "Nuhman@123",
 	}
-	jsonData, _ := json.Marshal(signUpData)
+	reqBody, err := json.Marshal(input)
+	if err != nil {
+		t.Error(err)
+	}
 
-	req, _ := http.NewRequest(http.MethodPost, "/signup", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest(http.MethodPost, "/signup", bytes.NewBuffer(reqBody))
 	req.Header.Set("Content-Type", "application/json")
-	recorder := httptest.NewRecorder()
-	router.ServeHTTP(recorder, req)
-	fmt.Println("----", recorder)
+	res := httptest.NewRecorder()
 
-	assert.Equal(t, http.StatusOK, recorder.Code)
-	assert.Contains(t, recorder.Body.String(), "User signed up successfully")
+	router.ServeHTTP(res, req)
 
-	// Assert that the expectations were met
-	mockDB.AssertExpectations(t)
+	t.Log(res.Body)
+	assert.Equal(t, http.StatusOK, res.Result().StatusCode)
+
 }
-
-// func TestSignUpPostError(t *testing.T) {
-//     // Initialize the mock database
-//     mockDB := new(database.MockDatabase)
-//     controller.DB = mockDB
-
-//     // Define expected behavior
-//     mockDB.On("CreateUser", "testuser", "password123").Return(mock.Anything)
-
-//     router := setupRouter()
-
-//     signUpData := controller.SignUpRequest{
-//         Username: "testuser",
-//         Password: "password123",
-//     }
-//     jsonData, _ := json.Marshal(signUpData)
-
-//     req, _ := http.NewRequest(http.MethodPost, "/signup", bytes.NewBuffer(jsonData))
-//     req.Header.Set("Content-Type", "application/json")
-
-//     recorder := httptest.NewRecorder()
-//     router.ServeHTTP(recorder, req)
-
-//     assert.Equal(t, http.StatusInternalServerError, recorder.Code)
-//     assert.Contains(t, recorder.Body.String(), "error")
-
-//     // Assert that the expectations were met
-//     mockDB.AssertExpectations(t)
-// }

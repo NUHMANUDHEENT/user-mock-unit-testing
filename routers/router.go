@@ -1,12 +1,13 @@
 package routers
 
 import (
-	"test/controller"
+	"userPage/controller"
+	"userPage/database"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(router *gin.Engine) {
-	router.POST("/signup", controller.SignUpPost)
-	// router.POST("/signup", controller.SignUp)
+func UserRoutes(router *gin.Engine) {
+	db := database.InitDatabase()
+	router.POST("/signup", controller.SignUp(db))
 }

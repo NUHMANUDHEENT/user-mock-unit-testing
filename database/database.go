@@ -1,7 +1,8 @@
 package database
 
 import (
-	"test/models"
+	"log"
+	"userPage/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -9,14 +10,26 @@ import (
 
 var DB *gorm.DB
 
-// connecting to database for access table
-func InitMethod() {
-	dsn := "host=localhost user=postgres  password=Nuhman@456 dbname=postgres port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+func InitDatabase() *gorm.DB {
+	db := createDB()
+	autoMigrate(db)
+	return db
+}
+
+func autoMigrate(db *gorm.DB) {
+	db.AutoMigrate(&models.Users{})
+}
+
+func createDB() *gorm.DB {
+	DSN := "host=localhost user=postgres password=Nuhman@456 dbname=postgres port=5432"
+	db, err := gorm.Open(postgres.Open(DSN), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect daatabase")
+		log.Fatal(err)
 	}
-	DB = db
-	//create table using struct
-	DB.AutoMigrate(&models.Users{})
+	return db
+}
+
+
+func SetDB(mockDB *gorm.DB) {
+	DB = mockDB
 }
