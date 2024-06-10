@@ -26,12 +26,12 @@ func SignUp(db *gorm.DB) gin.HandlerFunc {
 
 		if err != nil {
 			c.JSON(501, gin.H{
-				"error": "failed create user",
+				"error": "failed created user",
 			})
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"message": "successfully crated " + user.Name,
+			"message": "successfully created " + user.Name,
 		})
 	}
 }
