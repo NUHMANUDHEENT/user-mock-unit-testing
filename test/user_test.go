@@ -26,8 +26,8 @@ func TestSignUp(t *testing.T) {
 	router.POST("/signup", controller.SignUp(db))
 
 	input := models.Users{
-		Name:     "nuhman",
-		Email:    "nuhman@gmail.com",
+		Name:     "",
+		Email:    "",
 		Password: "Nuhman@123",
 	}
 	reqBody, err := json.Marshal(input)
