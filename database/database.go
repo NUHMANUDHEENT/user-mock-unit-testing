@@ -4,32 +4,28 @@ import (
 	"log"
 	"userPage/models"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
-
-func InitDatabase() *gorm.DB {
-	db := createDB()
-	autoMigrate(db)
-	return db
-}
+var Mock sqlmock.Sqlmock
 
 func autoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&models.Users{})
 }
 
-func createDB() *gorm.DB {
+func CreateDB() {
 	DSN := "host=localhost user=postgres password=Nuhman@456 dbname=postgres port=5432"
 	db, err := gorm.Open(postgres.Open(DSN), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	return db
+	autoMigrate(db)
+	DB = db
 }
 
-
-func SetDB(mockDB *gorm.DB) {
-	DB = mockDB
+func SetDB(database *gorm.DB) {
+	DB = database
 }
