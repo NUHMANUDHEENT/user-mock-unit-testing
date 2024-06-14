@@ -4,13 +4,11 @@ import (
 	"log"
 	"userPage/models"
 
-	"github.com/DATA-DOG/go-sqlmock"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
-var Mock sqlmock.Sqlmock
 
 func autoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&models.Users{})
