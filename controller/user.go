@@ -46,7 +46,3 @@ func Signup(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "User created successfully now"})
 }
 
-type LoginInput struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
