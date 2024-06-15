@@ -5,9 +5,13 @@ name: Go
 
 on:
   push:
-    branches: [ "master" ]
+    branches: 
+      - "master"
+      - "auth"
   pull_request:
-    branches: [ "master" ]
+    branches: 
+      - "master"
+      - "auth"
 
 jobs:
 
