@@ -23,12 +23,6 @@ jobs:
           POSTGRES_PASSWORD: Nuhman@456
         ports:
           - 5432:5432
-        options: > # Ensures the service is healthy before starting the job
-          --health-cmd="pg_isready -U postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -45,9 +39,5 @@ jobs:
       run: go build -v ./...
 
     - name: Run tests
-      env:
-        POSTGRES_DB: postgres
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: Nuhman@456
-        POSTGRES_HOST: localhost
+ 
       run: go test -v ./...
