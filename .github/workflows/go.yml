@@ -1,7 +1,4 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
-name: Go
+name: Go CI
 
 on:
   push:
@@ -14,9 +11,9 @@ on:
       - "auth"
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:latest
@@ -26,16 +23,31 @@ jobs:
           POSTGRES_PASSWORD: Nuhman@456
         ports:
           - 5432:5432
+        options: > # Ensures the service is healthy before starting the job
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.22'
 
+    - name: Install dependencies
+      run: go mod download
+
     - name: Build
       run: go build -v ./...
 
-    - name: Test
+    - name: Run tests
+      env:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: Nuhman@456
+        POSTGRES_HOST: localhost
       run: go test -v ./...
