@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/postgres"										
 	"gorm.io/gorm"
 )
 
@@ -52,7 +52,7 @@ func TestSignup(t *testing.T) {
 		router := gin.Default()
 		router.POST("/signup", controller.Signup)
 
-		payload := `{"name": "Test User", "email": "testuser@example.com", "password": "password123"}`
+		payload := `{"name": "", "email": "testuser@example.com", "password": "password123"}`
 		req, _ := http.NewRequest("POST", "/signup", bytes.NewBuffer([]byte(payload)))
 		req.Header.Set("Content-Type", "application/json")
 
