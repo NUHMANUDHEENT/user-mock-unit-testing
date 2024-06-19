@@ -52,7 +52,7 @@ func TestSignup(t *testing.T) {
 		router := gin.Default()
 		router.POST("/signup", controller.Signup)
 
-		payload := `{"name": "", "email": "testuser@example.com", "password": "password123"}`
+		payload := `{"name": "Test User", "email": "testuser@example.com", "password": "password123"}`
 		req, _ := http.NewRequest("POST", "/signup", bytes.NewBuffer([]byte(payload)))
 		req.Header.Set("Content-Type", "application/json")
 
