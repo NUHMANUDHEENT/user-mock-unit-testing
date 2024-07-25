@@ -19,8 +19,8 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Nuhman@456
+          POSTGRES_USER: ${{ secret.POSTGRES.USER }}
+          POSTGRES_PASSWORD: ${{ secret.POSTGRES.PASSWORD }}
         ports:
           - 5432:5432
     steps:
